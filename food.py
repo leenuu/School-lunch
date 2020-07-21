@@ -46,19 +46,13 @@ for i in data[1]:
 text = text.split('.')
 
 for i in range(len(text)):
-  if text[i] != None:
-    text_ += text[i] 
-
-text = text_.split(')')
-
-for i in text:
-  if i != None:
-    if text[len(text)-1] != i:
-      text_data += i + ')\n'
+  if text[i] != '':
+    if ')' in text[i]:
+      text_data += text[i][:text[i].index(")")+1] + '\n'
     else:
-      text_data += i
-  
-
+      text_data += text[i] + '\n'
+  else:
+    text_data += '' 
 
 
 win=tkinter.Tk()
@@ -81,9 +75,10 @@ if er == 0:
 
 img_label = tkinter.Label(win, image = imgg)
 if er == 1:
-  img_label.config(text='음식사진 없음')
+  img_label.config(text='음식사진 업로드 안됨')
 img_label.pack()
 
 win.mainloop()
-os.remove('img.png')
+if er == 0:
+  os.remove('img.png')
 
