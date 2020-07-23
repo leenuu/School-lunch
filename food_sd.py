@@ -1,5 +1,8 @@
 from fake_useragent import UserAgent
 from bs4 import BeautifulSoup
+from openpyxl import Workbook, load_workbook
+from openpyxl.styles import Alignment, Font
+from PIL import Image
 import datetime as dy
 import requests
 import tkinter
@@ -7,11 +10,11 @@ import tkinter.ttk
 import tkinter.font
 import urllib.request
 import cv2
-from PIL import Image
 import os 
 
-def get_sd():
+def get_time():
   
+  # print(val.get())
   sd_data = ''
   get_sd_url = f'http://jeil.jje.hs.kr/jeil-h/0208/board/16996/'
 
@@ -31,6 +34,80 @@ def get_sd():
 
   url_sd = f'http://jeil.jje.hs.kr/jeil-h/0208/board/16996/{data_url}'
   print(url_sd)
+
+
+  req_html = requests.get(url_sd, headers=header)
+  html = req_html.text
+
+  soup = BeautifulSoup(html,'html.parser')
+  pr = soup.find('dd').find_all('a')[1].get('href')
+
+  sh_name_day = soup.find('dd').find_all('a')[0].get_text()[soup.find('dd').find_all('a')[0].get_text().index("(") : soup.find('dd').find_all('a')[0].get_text().index(")")+1]
+  sh_name = f'{dy.datetime.today().month}.{dy.datetime.today().day}{sh_name_day}'
+  # sh_name = '날짜'
+  # print(sh_name)
+
+  preview_url = f'http://jeil.jje.hs.kr{pr}'
+
+  urllib.request.urlretrieve(preview_url, 'sd.xlsx')
+
+  data = load_workbook("sd.xlsx", data_only=True)
+  ds = data.active
+
+  wb = Workbook()
+  ws = wb.active
+
+  sum_cell = list()
+
+
+  for i in range(1,3):
+      for j in range(3,11):
+          sst = ''
+          ws.cell(row=j-1, column=i).value = ds.cell(row=j, column=i).value 
+          ws.cell(row=j-1, column=i).font = Font(name='맑은 고딕', size=16, bold=True)
+          ws.cell(row=j-1, column=i).alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
+          ws.column_dimensions['B'].width = 20
+
+  for i in range(15,28):
+      for j in range(3,11):
+          if j != 10:
+              ws.row_dimensions[j].height = 74
+          ws.cell(row=j-1, column=i-12).value = str(ds.cell(row=j, column=i).value)[0:2] + str(ds.cell(row=j, column=i).value)[2:]
+          ws.cell(row=j-1, column=i-12).alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
+          ws.cell(row=j-1, column=i-12).font = Font(name='맑은 고딕', size=14, bold=True)
+          if ds.cell(row=j, column=i).value == None:
+              sum_cell.append([i-12, j])
+
+  # print(sum_cell)
+
+  if sum_cell != []:
+    # for i in range(sum_cell[0][0]-1, sum_cell[len(sum_cell)-1][0]-1):
+    #   for j in range(sum_cell[0][1]-1, sum_cell[len(sum_cell)-1][1]):
+    #     ws.cell(row=i, column=j).value = str(ds.cell(row=i, column=j).value)[0:2] + str(ds.cell(row=i, column=j).value)[2:]
+      ws.merge_cells(start_row= sum_cell[0][1]-1, start_column=sum_cell[0][0]-1,end_row= sum_cell[len(sum_cell)-1][1]-1,end_column=sum_cell[len(sum_cell)-1][0])
+  wb.save(f"시간표 {sh_name}.xlsx")
+
+  
+
+  data = load_workbook(f"시간표 {sh_name}.xlsx", data_only=True)
+  ws = data.active
+
+  time = ''
+
+  # for p in range(1,14):
+  #   if val.get() == f'{p}반':
+  #     for q in range(3,10):
+  #       time += f'{q-2}교시:' + str(ws.cell(row=q, column=p+2).value).replace('\n',' ') + '\n'
+  
+  for q in range(3,10):
+        time += f'{q-2}교시:' + str(ws.cell(row=q, column=15).value).replace('\n',' ') + '\n'
+
+  time_label.config(text=time, font=font)
+  os.remove('sd.xlsx')
+  os.remove(f"시간표 {sh_name}.xlsx")
+
+
+
 
 
 data = list()
@@ -113,13 +190,18 @@ sd_label.pack()
 
 values=[str(i)+"반" for i in range(1, 14)] 
 
-combobox=tkinter.ttk.Combobox(frame3, height=15, values=values)
-combobox.pack()
+# val = tkinter.StringVar()
 
-combobox.set("반 선택")
+# combobox=tkinter.ttk.Combobox(frame3, textvariable=val, height=15, values=values)
+# combobox.pack()
 
-sd_brt = tkinter.Button(frame3, text="조회", command=get_sd)
+# combobox.set("반 선택")
+
+sd_brt = tkinter.Button(frame3, text="조회", command=get_time)
 sd_brt.pack()
+
+time_label = tkinter.Label(frame3, text='')
+time_label.pack()
 
 date_label = tkinter.Label(frame2, text=f'{dy.datetime.today().month}월 {dy.datetime.today().day}일 점심 식단', font=font)
 date_label.pack()
@@ -140,6 +222,6 @@ if er == 1:
 img_label.pack()
 
 win.mainloop()
-# if er == 0:
-#   os.remove('img.png')
+if er == 0:
+  os.remove('img.png')
 
