@@ -12,6 +12,7 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5 import uic
+from PyQt5 import QtCore
 
 #################################################### food ######################################################################################
 
@@ -159,6 +160,8 @@ except AttributeError:
     print("시간표 업데이트 안됨")
 
 #################################################### gui ######################################################################################
+ft = "굴림"
+sz = 14
 form_class = uic.loadUiType("test.ui")[0]
 
 class WindowClass(QMainWindow, form_class) :
@@ -166,6 +169,9 @@ class WindowClass(QMainWindow, form_class) :
         super().__init__()
         self.setupUi(self)
         self.pushButton.clicked.connect(self.get_time)
+        self.food_label.setFont(QFont(ft, sz))
+        self.time_label.setFont(QFont(ft, sz))
+        self.img_label.setFont(QFont(ft, sz))
         self.food_label.setText(text_data)
         if er == 0:
           self.qPixmapFileVar = QPixmap()
@@ -190,9 +196,9 @@ class WindowClass(QMainWindow, form_class) :
               if self.classnum.currentText() == f'{p}반':
                   for q in range(3,10):
                       if 15 <= len(str(ws.cell(row=q, column=p+2).value)):
-                          time += f'{q-2}교시:' + str(ws.cell(row=q, column=p+2).value) + '\n'
+                          time += f'{q-2}교시:' + str(ws.cell(row=q, column=p+2).value)[:9] 
                       else:
-                          time += f'{q-2}교시:' + str(ws.cell(row=q, column=p+2).value).replace('\n',' ') + '\n'
+                          time += f'{q-2}교시:' + str(ws.cell(row=q, column=p+2).value).replace('\n',' ')[:3] + '\n'
 
           #   for q in range(3,10):
           #         time += f'{q-2}교시:' + str(ws.cell(row=q, column=15).value).replace('\n',' ') + '\n'
