@@ -5,55 +5,13 @@ from openpyxl.styles import Alignment, Font
 from PIL import Image
 import datetime as dy
 import requests
-# import tkinter
-# import tkinter.ttk
-# import tkinter.font
 import urllib.request
 import cv2
 import os 
 import sys
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 from PyQt5 import uic
-
-form_class = uic.loadUiType("test.ui")[0]
-
-class WindowClass(QMainWindow, form_class) :
-    def __init__(self) :
-        super().__init__()
-        self.setupUi(self)
-        self.pushButton.clicked.connect(self.button1Function)
-
-    def button1Function(self):
-      print("btn_1 Clicked")
-
-
-
-
-
-def get_time():
-    try:
-        print(val.get())
-        data = load_workbook(f"시간표 {sh_name}.xlsx", data_only=True)
-        ws = data.active
-
-        time = ''
-
-        for p in range(1,14):
-            if val.get() == f'{p}반':
-                for q in range(3,10):
-                    if 15 <= len(str(ws.cell(row=q, column=p+2).value)):
-                        time += f'{q-2}교시:' + str(ws.cell(row=q, column=p+2).value) + '\n'
-                    else:
-                        time += f'{q-2}교시:' + str(ws.cell(row=q, column=p+2).value).replace('\n',' ') + '\n'
-
-        #   for q in range(3,10):
-        #         time += f'{q-2}교시:' + str(ws.cell(row=q, column=15).value).replace('\n',' ') + '\n'
-
-        # time_label.config(text=time, font=font)
-
-    except NameError:
-      pass
-        # time_label.config(text="시간표 업로드 안됨", font=font)
 
 #################################################### food ######################################################################################
 
@@ -63,8 +21,8 @@ text = ''
 text_ = ''
 te = ''
 er = 0
-url = f'http://jeil.jje.hs.kr/jeil-h/food/2020/{dy.datetime.today().month}/{dy.datetime.today().day}/lunch'
-# url = "http://jeil.jje.hs.kr/jeil-h/food/2020/7/28/lunch"
+# url = f'http://jeil.jje.hs.kr/jeil-h/food/2020/{dy.datetime.today().month}/{dy.datetime.today().day}/lunch'
+url = "http://jeil.jje.hs.kr/jeil-h/food/2020/7/31/lunch"
 
 ua = UserAgent()
 header = {'User-Agent':str(ua.chrome)}
@@ -75,13 +33,13 @@ soup = BeautifulSoup(html,'html.parser')
 try:
   img_ = 'http://jeil.jje.hs.kr/'+ soup.find('img').get('src')
 
-  urllib.request.urlretrieve(img_,'img.png')
+  urllib.request.urlretrieve(img_,'img.jpg')
 
-  image = Image.open('img.png')
+  image = Image.open('img.jpg')
 
   resize_image = image.resize((360,360))
 
-  resize_image.save('img.png')
+  resize_image.save('img.jpg')
   
 except AttributeError:
   imgg = ''
@@ -117,6 +75,8 @@ if '.' in text_data:
 #   print('2')
   text_data = text_data.replace('.','')
 
+text_data = f'{dy.datetime.today().month}월 {dy.datetime.today().day}일 점심 식단\n' + text_data
+
 
 #################################################### time_table ######################################################################################
 
@@ -132,8 +92,8 @@ try:
     soup = BeautifulSoup(html,'html.parser')
 
     for i in soup.find('tbody').find_all('a'):
-        if f'{dy.datetime.today().month}/{dy.datetime.today().day}' in str(i): 
-        # if f'{8}/{31}' in str(i): 
+        # if f'{dy.datetime.today().month}/{dy.datetime.today().day}' in str(i): 
+        if f'{7}/{31}' in str(i): 
             sd_data = i
 
     data_url = str(sd_data.get('onclick'))[str(sd_data.get('onclick')).index('(')+1:str(sd_data.get('onclick')).index(')')].split(',')[1].replace("'",'')
@@ -167,23 +127,23 @@ try:
     sum_cell = list()
 
 
-    for i in range(1,3):
+    for i in range(2,4):
         for j in range(3,11):
             sst = ''
-            ws.cell(row=j-1, column=i).value = ds.cell(row=j, column=i).value 
-            ws.cell(row=j-1, column=i).font = Font(name='맑은 고딕', size=16, bold=True)
-            ws.cell(row=j-1, column=i).alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
+            ws.cell(row=j-1, column=i-1).value = ds.cell(row=j, column=i).value 
+            ws.cell(row=j-1, column=i-1).font = Font(name='맑은 고딕', size=16, bold=True)
+            ws.cell(row=j-1, column=i-1).alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
             ws.column_dimensions['B'].width = 20
 
-    for i in range(15,28):
+    for i in range(16,29):
         for j in range(3,11):
             if j != 10:
                 ws.row_dimensions[j].height = 74
-            ws.cell(row=j-1, column=i-12).value = str(ds.cell(row=j, column=i).value)[0:2] + str(ds.cell(row=j, column=i).value)[2:]
-            ws.cell(row=j-1, column=i-12).alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
-            ws.cell(row=j-1, column=i-12).font = Font(name='맑은 고딕', size=14, bold=True)
+            ws.cell(row=j-1, column=i-13).value = str(ds.cell(row=j, column=i).value)[0:2] + str(ds.cell(row=j, column=i).value)[2:]
+            ws.cell(row=j-1, column=i-13).alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
+            ws.cell(row=j-1, column=i-13).font = Font(name='맑은 고딕', size=14, bold=True)
             if ds.cell(row=j, column=i).value == None:
-                sum_cell.append([i-12, j])
+                sum_cell.append([i-13, j])
 
     # print(sum_cell)
 
@@ -199,72 +159,56 @@ except AttributeError:
     print("시간표 업데이트 안됨")
 
 #################################################### gui ######################################################################################
+form_class = uic.loadUiType("test.ui")[0]
+
+class WindowClass(QMainWindow, form_class) :
+    def __init__(self) :
+        super().__init__()
+        self.setupUi(self)
+        self.pushButton.clicked.connect(self.get_time)
+        self.food_label.setText(text_data)
+        if er == 0:
+          self.qPixmapFileVar = QPixmap()
+          self.qPixmapFileVar.load("img.jpg")
+          # self.qPixmapFileVar = self.qPixmapFileVar.scaledToWidth(600)
+          self.img_label.setPixmap(self.qPixmapFileVar)
+        else:
+          self.img_label.setText("\n\n\n음식사진 업로드 안됨 \n 3교시이후 업로드 예정")
+
+    def button1Function(self):
+      print("btn_1 Clicked")
+
+    def get_time(self):
+      try:
+          print(self.classnum.currentText())
+          data = load_workbook(f"시간표 {sh_name}.xlsx", data_only=True)
+          ws = data.active
+
+          time = ''
+
+          for p in range(1,14):
+              if self.classnum.currentText() == f'{p}반':
+                  for q in range(3,10):
+                      if 15 <= len(str(ws.cell(row=q, column=p+2).value)):
+                          time += f'{q-2}교시:' + str(ws.cell(row=q, column=p+2).value) + '\n'
+                      else:
+                          time += f'{q-2}교시:' + str(ws.cell(row=q, column=p+2).value).replace('\n',' ') + '\n'
+
+          #   for q in range(3,10):
+          #         time += f'{q-2}교시:' + str(ws.cell(row=q, column=15).value).replace('\n',' ') + '\n'
+
+          self.time_label.setText(time)
+
+      except NameError:
+        self.time_label.setText("시간표 업로드 안됨")
 
 if __name__ == "__main__" :
-    app = QApplication(sys.argv) 
-    myWindow = WindowClass() 
-    myWindow.show()
-    app.exec_()
+  app = QApplication(sys.argv) 
+  myWindow = WindowClass() 
+  myWindow.show()
+  app.exec_()
 
-# win=tkinter.Tk()
-# win.title("급식")
-# win.geometry("1080x360+100+100")
-# win.resizable(False, False)
-
-# # req_btn = tkinter.Button(win, text="급식", overrelief="solid", command=req, repeatdelay=1000, repeatinterval=100)
-# # req_btn.pack()
-
-
-# frame1=tkinter.Frame(win, relief="solid", bd=2, width=360, height=480)
-# frame1.pack(side="right", fill="both", expand=True)
-
-# frame2=tkinter.Frame(win, relief="solid", bd=2, width=360, height=480)
-# frame2.pack(side="right", fill="both", expand=True)
-
-# frame3=tkinter.Frame(win, relief="solid", bd=2, width=360, height=480)
-# frame3.pack(side="right", fill="both", expand=True)
-
-# font = tkinter.font.Font(family="맑은 고딕" ,size=14)
-
-# sd_label = tkinter.Label(frame3, text='시간표 조회', font=font)
-# sd_label.pack()
-
-# values=[str(i)+"반" for i in range(1, 14)] 
-
-# val = tkinter.StringVar()
-
-# combobox=tkinter.ttk.Combobox(frame3, textvariable=val, height=15, values=values)
-# combobox.pack()
-
-# combobox.set("반 선택")
-
-# sd_brt = tkinter.Button(frame3, text="조회", command=get_time)
-# sd_brt.pack()
-
-# time_label = tkinter.Label(frame3, text='')
-# time_label.pack()
-
-# date_label = tkinter.Label(frame2, text=f'{dy.datetime.today().month}월 {dy.datetime.today().day}일 점심 식단', font=font)
-# # date_label = tkinter.Label(frame2, text=f'{7}월 {31}일 점심 식단', font=font)
-# date_label.pack()
-
-# res_label = tkinter.Label(frame2 ,text=text_data ,font=font)
-# res_label.pack()
-
-
-# if er == 0:
-#   img = cv2.imread('img.png')
-#   cv2.imwrite('img.png',img)
-
-#   imgg = tkinter.PhotoImage(file='img.png')
-
-# img_label = tkinter.Label(frame1, image = imgg)
-# if er == 1:
-#   img_label.config(text='\n\n음식사진 업로드 안됨 \n 3교시이후 업로드 예정', font=font)
-# img_label.pack()
-
-# win.mainloop()
-if er == 0:
-  os.remove('img.png')
-os.remove('sd.xlsx')
-os.remove(f"시간표 {sh_name}.xlsx")
+  if er == 0:
+    os.remove('img.jpg')
+  os.remove('sd.xlsx')
+  os.remove(f"시간표 {sh_name}.xlsx")
