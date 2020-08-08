@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>497</width>
+    <height>360</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QComboBox" name="comboBox">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>40</y>
+     <width>71</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>1반</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>2반</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>3반</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>4반</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>5반</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>6반</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>7반</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>8반</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>9반</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>10반</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>11반</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>12반</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>13반</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>80</y>
+     <width>161</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>40</y>
+     <width>81</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>조회</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>80</y>
+     <width>161</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

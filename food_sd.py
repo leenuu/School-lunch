@@ -5,12 +5,30 @@ from openpyxl.styles import Alignment, Font
 from PIL import Image
 import datetime as dy
 import requests
-import tkinter
-import tkinter.ttk
-import tkinter.font
+# import tkinter
+# import tkinter.ttk
+# import tkinter.font
 import urllib.request
 import cv2
 import os 
+import sys
+from PyQt5.QtWidgets import *
+from PyQt5 import uic
+
+form_class = uic.loadUiType("test.ui")[0]
+
+class WindowClass(QMainWindow, form_class) :
+    def __init__(self) :
+        super().__init__()
+        self.setupUi(self)
+        self.pushButton.clicked.connect(self.button1Function)
+
+    def button1Function(self):
+      print("btn_1 Clicked")
+
+
+
+
 
 def get_time():
     try:
@@ -31,10 +49,11 @@ def get_time():
         #   for q in range(3,10):
         #         time += f'{q-2}교시:' + str(ws.cell(row=q, column=15).value).replace('\n',' ') + '\n'
 
-        time_label.config(text=time, font=font)
+        # time_label.config(text=time, font=font)
 
     except NameError:
-        time_label.config(text="시간표 업로드 안됨", font=font)
+      pass
+        # time_label.config(text="시간표 업로드 안됨", font=font)
 
 #################################################### food ######################################################################################
 
@@ -88,7 +107,7 @@ for i in range(len(text)):
     else:
       text_data += text[i] + '\n'
   else:
-    text_data += + '\n' 
+    text_data += '\n' 
 
 if '%' in text_data:
 #   print('1')
@@ -181,64 +200,70 @@ except AttributeError:
 
 #################################################### gui ######################################################################################
 
-win=tkinter.Tk()
-win.title("급식")
-win.geometry("1080x360+100+100")
-win.resizable(False, False)
+if __name__ == "__main__" :
+    app = QApplication(sys.argv) 
+    myWindow = WindowClass() 
+    myWindow.show()
+    app.exec_()
 
-# req_btn = tkinter.Button(win, text="급식", overrelief="solid", command=req, repeatdelay=1000, repeatinterval=100)
-# req_btn.pack()
+# win=tkinter.Tk()
+# win.title("급식")
+# win.geometry("1080x360+100+100")
+# win.resizable(False, False)
 
-
-frame1=tkinter.Frame(win, relief="solid", bd=2, width=360, height=480)
-frame1.pack(side="right", fill="both", expand=True)
-
-frame2=tkinter.Frame(win, relief="solid", bd=2, width=360, height=480)
-frame2.pack(side="right", fill="both", expand=True)
-
-frame3=tkinter.Frame(win, relief="solid", bd=2, width=360, height=480)
-frame3.pack(side="right", fill="both", expand=True)
-
-font = tkinter.font.Font(family="맑은 고딕" ,size=14)
-
-sd_label = tkinter.Label(frame3, text='시간표 조회', font=font)
-sd_label.pack()
-
-values=[str(i)+"반" for i in range(1, 14)] 
-
-val = tkinter.StringVar()
-
-combobox=tkinter.ttk.Combobox(frame3, textvariable=val, height=15, values=values)
-combobox.pack()
-
-combobox.set("반 선택")
-
-sd_brt = tkinter.Button(frame3, text="조회", command=get_time)
-sd_brt.pack()
-
-time_label = tkinter.Label(frame3, text='')
-time_label.pack()
-
-date_label = tkinter.Label(frame2, text=f'{dy.datetime.today().month}월 {dy.datetime.today().day}일 점심 식단', font=font)
-# date_label = tkinter.Label(frame2, text=f'{7}월 {31}일 점심 식단', font=font)
-date_label.pack()
-
-res_label = tkinter.Label(frame2 ,text=text_data ,font=font)
-res_label.pack()
+# # req_btn = tkinter.Button(win, text="급식", overrelief="solid", command=req, repeatdelay=1000, repeatinterval=100)
+# # req_btn.pack()
 
 
-if er == 0:
-  img = cv2.imread('img.png')
-  cv2.imwrite('img.png',img)
+# frame1=tkinter.Frame(win, relief="solid", bd=2, width=360, height=480)
+# frame1.pack(side="right", fill="both", expand=True)
 
-  imgg = tkinter.PhotoImage(file='img.png')
+# frame2=tkinter.Frame(win, relief="solid", bd=2, width=360, height=480)
+# frame2.pack(side="right", fill="both", expand=True)
 
-img_label = tkinter.Label(frame1, image = imgg)
-if er == 1:
-  img_label.config(text='\n\n음식사진 업로드 안됨 \n 3교시이후 업로드 예정', font=font)
-img_label.pack()
+# frame3=tkinter.Frame(win, relief="solid", bd=2, width=360, height=480)
+# frame3.pack(side="right", fill="both", expand=True)
 
-win.mainloop()
+# font = tkinter.font.Font(family="맑은 고딕" ,size=14)
+
+# sd_label = tkinter.Label(frame3, text='시간표 조회', font=font)
+# sd_label.pack()
+
+# values=[str(i)+"반" for i in range(1, 14)] 
+
+# val = tkinter.StringVar()
+
+# combobox=tkinter.ttk.Combobox(frame3, textvariable=val, height=15, values=values)
+# combobox.pack()
+
+# combobox.set("반 선택")
+
+# sd_brt = tkinter.Button(frame3, text="조회", command=get_time)
+# sd_brt.pack()
+
+# time_label = tkinter.Label(frame3, text='')
+# time_label.pack()
+
+# date_label = tkinter.Label(frame2, text=f'{dy.datetime.today().month}월 {dy.datetime.today().day}일 점심 식단', font=font)
+# # date_label = tkinter.Label(frame2, text=f'{7}월 {31}일 점심 식단', font=font)
+# date_label.pack()
+
+# res_label = tkinter.Label(frame2 ,text=text_data ,font=font)
+# res_label.pack()
+
+
+# if er == 0:
+#   img = cv2.imread('img.png')
+#   cv2.imwrite('img.png',img)
+
+#   imgg = tkinter.PhotoImage(file='img.png')
+
+# img_label = tkinter.Label(frame1, image = imgg)
+# if er == 1:
+#   img_label.config(text='\n\n음식사진 업로드 안됨 \n 3교시이후 업로드 예정', font=font)
+# img_label.pack()
+
+# win.mainloop()
 if er == 0:
   os.remove('img.png')
 os.remove('sd.xlsx')
