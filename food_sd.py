@@ -61,25 +61,7 @@ def ch_update():
       os.remove(os.getcwd() + '/update.zip')
       subprocess.Popen(path + "\\update\\update.exe", close_fds=True)
 
-
-
-
-
-path = ''
-path_list = os.getcwd().split('\\')
-for i in range(len(path_list)-1):
-    if i == 0:
-        path += path_list[i]
-    else:
-        path += f'\\{path_list[i]}'
-
-subprocess.Popen(path + "\\update\\update.exe", close_fds=True)
-      
-
-
-
-  
-
+ch_update()
 #################################################### food ######################################################################################
 
 data = list()
