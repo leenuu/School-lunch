@@ -3,14 +3,82 @@ from bs4 import BeautifulSoup
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment, Font
 from PIL import Image
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import uic
 import datetime as dy
 import requests
 import urllib.request
 import cv2
 import os 
 import sys
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5 import uic
+import zipfile
+import shutil
+import ctypes
+#################################################### updata ####################################################################################
+
+def is_admin():
+    try:
+        return ctypes.windll.Shell32.IsUserAnAdmin()
+    except:
+        return False
+
+def unzip(source_file, dest_path):
+    with zipfile.ZipFile(source_file, 'r') as zf:
+        zf.extractall(path=dest_path)
+        zf.close()
+
+def ch_update():
+    path = ''
+    url = 'https://github.com/leenuu/School-lunch-and-school-schedule/blob/master/update.txt'
+    ua = UserAgent()
+    header = {'User-Agent':str(ua.chrome)}
+    req_html = requests.get(url, headers=header)
+    html = req_html.text
+    soup = BeautifulSoup(html,'html.parser')
+
+
+    if int(soup.find('div', class_='Box-body p-0 blob-wrapper data type-text').find('td', id='LC1').get_text()) == 1:
+      if is_admin():
+        pass
+      else:
+        # Re-run the program with admin rights
+        ctypes.windll.Shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
+      print('update')
+      url = 'https://github.com/leenuu/food_sd/archive/master.zip'
+      urllib.request.urlretrieve(url,'update.zip')
+      unzip(os.getcwd() + '/update.zip', os.getcwd())
+      path_list = os.getcwd().split('\\')
+      for i in range(len(path_list)-1):
+          if i == 0:
+              path += path_list[i]
+          else:
+              path += f'\\{path_list[i]}'
+      # print(path)
+      # output = os.popen('dir').read() 
+      # print(output)
+      os.rename('food_sd-master', path + '\\update')
+      os.remove(os.getcwd() + '/update.zip')
+      subprocess.Popen(path + "\\update\\update.exe", close_fds=True)
+
+
+
+
+
+path = ''
+path_list = os.getcwd().split('\\')
+for i in range(len(path_list)-1):
+    if i == 0:
+        path += path_list[i]
+    else:
+        path += f'\\{path_list[i]}'
+
+subprocess.Popen(path + "\\update\\update.exe", close_fds=True)
+      
+
+
+
+  
+
 #################################################### food ######################################################################################
 
 data = list()
