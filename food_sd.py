@@ -204,7 +204,7 @@ class Ui_Form(object):
         self.img_label.setFont(QtGui.QFont(ft, sz))
         self.food_label.setText(text_data)
         if er == 0:
-          self.qPixmapFileVar = QPixmap()
+          self.qPixmapFileVar = QtGui.QPixmap()
           self.qPixmapFileVar.load("img.jpg")
           # self.qPixmapFileVar = self.qPixmapFileVar.scaledToWidth(600)
           self.img_label.setPixmap(self.qPixmapFileVar)
