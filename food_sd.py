@@ -19,7 +19,7 @@ text_data = '\n'
 text = ''
 text_ = ''
 te = ''
-er = 0
+img_er = 0
 url = f'http://jeil.jje.hs.kr/jeil-h/food/2020/{dy.datetime.today().month}/{dy.datetime.today().day}/lunch'
 # url = "http://jeil.jje.hs.kr/jeil-h/food/2020/7/31/lunch"
 
@@ -42,7 +42,7 @@ try:
   
 except AttributeError:
   imgg = ''
-  er = 1
+  img_er = 1
 
 te = str(soup.find_all('dd')[1]).replace('<br/>','\n').replace('<dd>','').replace('</dd>','')
 
@@ -81,6 +81,7 @@ text_data = f'{dy.datetime.today().month}월 {dy.datetime.today().day}일 점심
 
 sd_data = ''
 get_sd_url = f'http://jeil.jje.hs.kr/jeil-h/0208/board/16996/'
+time_er = 0
 
 try:
     ua = UserAgent()
@@ -156,6 +157,7 @@ try:
 
 except AttributeError:
     print("시간표 업데이트 안됨")
+    time_er = 1
 
 #################################################### gui ######################################################################################
 ft = "굴림"
@@ -182,7 +184,7 @@ class Ui_Form(object):
         self.classnum.addItem("")
         self.classnum.addItem("")
         self.time_label = QtWidgets.QLabel(Form)
-        self.time_label.setGeometry(QtCore.QRect(10, 80, 201, 211))
+        self.time_label.setGeometry(QtCore.QRect(20, 80, 251, 211))
         self.time_label.setText("")
         self.time_label.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
         self.time_label.setObjectName("time_label")
@@ -190,7 +192,7 @@ class Ui_Form(object):
         self.pushButton.setGeometry(QtCore.QRect(130, 40, 81, 23))
         self.pushButton.setObjectName("pushButton")
         self.food_label = QtWidgets.QLabel(Form)
-        self.food_label.setGeometry(QtCore.QRect(250, 80, 231, 211))
+        self.food_label.setGeometry(QtCore.QRect(250, 40, 231, 251))
         self.food_label.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
         self.food_label.setObjectName("food_label")
         self.img_label = QtWidgets.QLabel(Form)
@@ -204,7 +206,7 @@ class Ui_Form(object):
         self.time_label.setFont(QtGui.QFont(ft, sz))
         self.img_label.setFont(QtGui.QFont(ft, sz))
         self.food_label.setText(text_data)
-        if er == 0:
+        if img_er == 0:
           self.qPixmapFileVar = QtGui.QPixmap()
           self.qPixmapFileVar.load("img.jpg")
           # self.qPixmapFileVar = self.qPixmapFileVar.scaledToWidth(600)
@@ -225,9 +227,9 @@ class Ui_Form(object):
               if self.classnum.currentText() == f'{p}반':
                   for q in range(3,10):
                       if 15 <= len(str(ws.cell(row=q, column=p+2).value)):
-                          time += f'{q-2}교시:' + str(ws.cell(row=q, column=p+2).value)[:9] 
+                          time += f'{q-2}교시:' + str(ws.cell(row=q, column=p+2).value)
                       else:
-                          time += f'{q-2}교시:' + str(ws.cell(row=q, column=p+2).value).replace('\n',' ')[:3] + '\n'
+                          time += f'{q-2}교시:' + str(ws.cell(row=q, column=p+2).value).replace('\n',' ') + '\n'
 
           #   for q in range(3,10):
           #         time += f'{q-2}교시:' + str(ws.cell(row=q, column=15).value).replace('\n',' ') + '\n'
@@ -267,11 +269,15 @@ if __name__ == "__main__":
     ui = Ui_Form()
     ui.setupUi(Form)
     Form.show()
-    sys.exit(app.exec_())
 
-    os.remove('img.jpg')
-    os.remove('sd.xlsx')
-    os.remove(f"시간표 {sh_name}.xlsx")
+    app.exec_()
+    if img_er == 0:
+      os.remove('img.jpg')
+    if time_er == 0:
+      os.remove('sd.xlsx')
+      os.remove(f"시간표 {sh_name}.xlsx")
+
+
 
 
 
