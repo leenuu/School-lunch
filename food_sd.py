@@ -36,7 +36,7 @@ try:
 
   image = Image.open('img.jpg')
 
-  resize_image = image.resize((611,351))
+  resize_image = image.resize((611,345))
 
   resize_image.save('img.jpg')
   
@@ -165,14 +165,14 @@ except AttributeError:
     print("시간표 업데이트 안됨")
     time_er = 1
 ft = "굴림"
-sz = 14
+sz = 15
 
 class Ui_Form(object):
     
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.setFixedSize(640, 640)
-        Form.resize(640, 640)
+        Form.setFixedSize(640, 700)
+        Form.resize(640, 700)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -192,11 +192,11 @@ class Ui_Form(object):
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
         self.img_label = QtWidgets.QLabel(self.tab)
-        self.img_label.setGeometry(QtCore.QRect(1, 228, 611, 340))
+        self.img_label.setGeometry(QtCore.QRect(1, 303, 611, 345))
         self.img_label.setAlignment(QtCore.Qt.AlignCenter)
         self.img_label.setObjectName("img_label")
         self.food_label = QtWidgets.QLabel(self.tab)
-        self.food_label.setGeometry(QtCore.QRect(0, 0, 611, 220))
+        self.food_label.setGeometry(QtCore.QRect(0, 0, 611, 280))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -208,12 +208,12 @@ class Ui_Form(object):
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
         self.time_label = QtWidgets.QLabel(self.tab_2)
-        self.time_label.setGeometry(QtCore.QRect(0, 170, 611, 411))
+        self.time_label.setGeometry(QtCore.QRect(0, 190, 611, 511))
         self.time_label.setText("")
-        self.time_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.time_label.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
         self.time_label.setObjectName("time_label")
         self.comboBox = QtWidgets.QComboBox(self.tab_2)
-        self.comboBox.setGeometry(QtCore.QRect(150, 70, 111, 41))
+        self.comboBox.setGeometry(QtCore.QRect(150, 90, 111, 41))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -234,7 +234,7 @@ class Ui_Form(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.pushButton = QtWidgets.QPushButton(self.tab_2)
-        self.pushButton.setGeometry(QtCore.QRect(340, 70, 111, 41))
+        self.pushButton.setGeometry(QtCore.QRect(340, 90, 111, 41))
         self.pushButton.setObjectName("pushButton")
         self.text = QtWidgets.QLabel(self.tab_2)
         self.text.setGeometry(QtCore.QRect(150, -10, 301, 91))
@@ -245,6 +245,7 @@ class Ui_Form(object):
         self.food_label.setFont(QtGui.QFont(ft, sz))
         self.time_label.setFont(QtGui.QFont(ft, sz))
         self.img_label.setFont(QtGui.QFont(ft, sz))
+        self.text.setFont(QtGui.QFont(ft, sz))
         self.retranslateUi(Form)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Form)
