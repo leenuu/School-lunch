@@ -36,7 +36,7 @@ try:
 
   image = Image.open('img.jpg')
 
-  resize_image = image.resize((360,360))
+  resize_image = image.resize((611,351))
 
   resize_image.save('img.jpg')
   
@@ -124,87 +124,132 @@ try:
     wb = Workbook()
     ws = wb.active
 
+    st = 0
+
+    if ds.cell(row=10, column=2).value == None:
+        st = 1
+
     sum_cell = list()
 
 
     for i in range(2,4):
-        for j in range(3,11):
+        for j in range(3,11 - st):
             sst = ''
-            ws.cell(row=j-1, column=i-1).value = ds.cell(row=j, column=i).value 
-            ws.cell(row=j-1, column=i-1).font = Font(name='맑은 고딕', size=16, bold=True)
-            ws.cell(row=j-1, column=i-1).alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
+            ws.cell(row=j-2, column=i-1).value = ds.cell(row=j, column=i).value 
+            ws.cell(row=j-2, column=i-1).font = Font(name='맑은 고딕', size=16, bold=True)
+            ws.cell(row=j-2, column=i-1).alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
             ws.column_dimensions['B'].width = 20
 
     for i in range(16,29):
-        for j in range(3,11):
+        for j in range(3,11 - st):
             if j != 10:
                 ws.row_dimensions[j].height = 74
-            ws.cell(row=j-1, column=i-13).value = str(ds.cell(row=j, column=i).value)[0:2] + str(ds.cell(row=j, column=i).value)[2:]
-            ws.cell(row=j-1, column=i-13).alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
-            ws.cell(row=j-1, column=i-13).font = Font(name='맑은 고딕', size=14, bold=True)
+            ws.cell(row=j-2, column=i-13).value = str(ds.cell(row=j, column=i).value)[0:2] + str(ds.cell(row=j, column=i).value)[2:]
+            ws.cell(row=j-2, column=i-13).alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
+            ws.cell(row=j-2, column=i-13).font = Font(name='맑은 고딕', size=14, bold=True)
             if ds.cell(row=j, column=i).value == None:
-                sum_cell.append([i-13, j])
+                sum_cell.append([i-13, j-1])
+
 
     # print(sum_cell)
 
     if sum_cell != []:
         for i in range(sum_cell[0][1]-1, sum_cell[len(sum_cell)-1][1]):
-            for j in range(sum_cell[0][0], sum_cell[len(sum_cell)-1][0]+1):
-                ws.cell(row=i, column=j).value = ws.cell(row=sum_cell[0][1]-1, column=sum_cell[0][0]-1).value
-        
-    #   ws.merge_cells(start_row= sum_cell[0][1]-1, start_column=sum_cell[0][0]-1,end_row= sum_cell[len(sum_cell)-1][1]-1,end_column=sum_cell[len(sum_cell)-1][0])
-    wb.save(f"시간표 {sh_name}.xlsx")
+                for j in range(sum_cell[0][0], sum_cell[len(sum_cell)-1][0]+1):
+                    ws.cell(row=i, column=j).value = ws.cell(row=sum_cell[0][1]-1, column=sum_cell[0][0]-1).value
+            
+        #   ws.merge_cells(start_row= sum_cell[0][1]-1, start_column=sum_cell[0][0]-1,end_row= sum_cell[len(sum_cell)-1][1]-1,end_column=sum_cell[len(sum_cell)-1][0])
+        wb.save(f"시간표 {sh_name}.xlsx")
 
 except AttributeError:
     print("시간표 업데이트 안됨")
     time_er = 1
-
-#################################################### gui ######################################################################################
 ft = "굴림"
 sz = 14
 
 class Ui_Form(object):
+    
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(878, 360)
-        self.classnum = QtWidgets.QComboBox(Form)
-        self.classnum.setGeometry(QtCore.QRect(10, 40, 71, 20))
-        self.classnum.setObjectName("classnum")
-        self.classnum.addItem("")
-        self.classnum.addItem("")
-        self.classnum.addItem("")
-        self.classnum.addItem("")
-        self.classnum.addItem("")
-        self.classnum.addItem("")
-        self.classnum.addItem("")
-        self.classnum.addItem("")
-        self.classnum.addItem("")
-        self.classnum.addItem("")
-        self.classnum.addItem("")
-        self.classnum.addItem("")
-        self.classnum.addItem("")
-        self.time_label = QtWidgets.QLabel(Form)
-        self.time_label.setGeometry(QtCore.QRect(20, 80, 251, 211))
-        self.time_label.setText("")
-        self.time_label.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
-        self.time_label.setObjectName("time_label")
-        self.pushButton = QtWidgets.QPushButton(Form)
-        self.pushButton.setGeometry(QtCore.QRect(130, 40, 81, 23))
-        self.pushButton.setObjectName("pushButton")
-        self.food_label = QtWidgets.QLabel(Form)
-        self.food_label.setGeometry(QtCore.QRect(250, 40, 231, 251))
+        Form.setFixedSize(640, 640)
+        Form.resize(640, 640)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(Form.sizePolicy().hasHeightForWidth())
+        Form.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setWeight(50)
+        Form.setFont(font)
+        self.gridLayout = QtWidgets.QGridLayout(Form)
+        self.gridLayout.setObjectName("gridLayout")
+        self.tabWidget = QtWidgets.QTabWidget(Form)
+        self.tabWidget.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.tabWidget.setObjectName("tabWidget")
+        self.tab = QtWidgets.QWidget()
+        self.tab.setObjectName("tab")
+        self.img_label = QtWidgets.QLabel(self.tab)
+        self.img_label.setGeometry(QtCore.QRect(1, 228, 611, 340))
+        self.img_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.img_label.setObjectName("img_label")
+        self.food_label = QtWidgets.QLabel(self.tab)
+        self.food_label.setGeometry(QtCore.QRect(0, 0, 611, 220))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.food_label.sizePolicy().hasHeightForWidth())
+        self.food_label.setSizePolicy(sizePolicy)
         self.food_label.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
         self.food_label.setObjectName("food_label")
-        self.img_label = QtWidgets.QLabel(Form)
-        self.img_label.setGeometry(QtCore.QRect(510, 0, 360, 360))
-        self.img_label.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
-        self.img_label.setObjectName("img_label")
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
-        self.pushButton.clicked.connect(self.get_time)
+        self.tabWidget.addTab(self.tab, "")
+        self.tab_2 = QtWidgets.QWidget()
+        self.tab_2.setObjectName("tab_2")
+        self.time_label = QtWidgets.QLabel(self.tab_2)
+        self.time_label.setGeometry(QtCore.QRect(0, 170, 611, 411))
+        self.time_label.setText("")
+        self.time_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.time_label.setObjectName("time_label")
+        self.comboBox = QtWidgets.QComboBox(self.tab_2)
+        self.comboBox.setGeometry(QtCore.QRect(150, 70, 111, 41))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.comboBox.sizePolicy().hasHeightForWidth())
+        self.comboBox.setSizePolicy(sizePolicy)
+        self.comboBox.setObjectName("comboBox")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.pushButton = QtWidgets.QPushButton(self.tab_2)
+        self.pushButton.setGeometry(QtCore.QRect(340, 70, 111, 41))
+        self.pushButton.setObjectName("pushButton")
+        self.text = QtWidgets.QLabel(self.tab_2)
+        self.text.setGeometry(QtCore.QRect(150, -10, 301, 91))
+        self.text.setAlignment(QtCore.Qt.AlignCenter)
+        self.text.setObjectName("text")
+        self.tabWidget.addTab(self.tab_2, "")
+        self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
         self.food_label.setFont(QtGui.QFont(ft, sz))
         self.time_label.setFont(QtGui.QFont(ft, sz))
         self.img_label.setFont(QtGui.QFont(ft, sz))
+        self.retranslateUi(Form)
+        self.tabWidget.setCurrentIndex(0)
+        QtCore.QMetaObject.connectSlotsByName(Form)
+
+        self.pushButton.clicked.connect(self.get_time)
         self.food_label.setText(text_data)
         if img_er == 0:
           self.qPixmapFileVar = QtGui.QPixmap()
@@ -214,22 +259,21 @@ class Ui_Form(object):
         else:
           self.img_label.setText("\n\n\n음식사진 업로드 안됨 \n 3교시이후 업로드 예정")
 
-
     def get_time(self):
       try:
-          print(self.classnum.currentText())
+          print(self.comboBox.currentText())
           data = load_workbook(f"시간표 {sh_name}.xlsx", data_only=True)
           ws = data.active
 
           time = ''
 
           for p in range(1,14):
-              if self.classnum.currentText() == f'{p}반':
-                  for q in range(3,10):
+              if self.comboBox.currentText() == f'{p}반':
+                  for q in range(2,9-st):
                       if 15 <= len(str(ws.cell(row=q, column=p+2).value)):
-                          time += f'{q-2}교시:' + str(ws.cell(row=q, column=p+2).value)
+                          time += f'{q-1}교시:' + str(ws.cell(row=q, column=p+2).value) + '\n'
                       else:
-                          time += f'{q-2}교시:' + str(ws.cell(row=q, column=p+2).value).replace('\n',' ') + '\n'
+                          time += f'{q-1}교시:' + str(ws.cell(row=q, column=p+2).value).replace('\n',' ') + '\n'
 
           #   for q in range(3,10):
           #         time += f'{q-2}교시:' + str(ws.cell(row=q, column=15).value).replace('\n',' ') + '\n'
@@ -239,45 +283,40 @@ class Ui_Form(object):
       except NameError:
         self.time_label.setText("시간표 업로드 안됨")
 
-
-
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.classnum.setItemText(0, _translate("Form", "1반"))
-        self.classnum.setItemText(1, _translate("Form", "2반"))
-        self.classnum.setItemText(2, _translate("Form", "3반"))
-        self.classnum.setItemText(3, _translate("Form", "4반"))
-        self.classnum.setItemText(4, _translate("Form", "5반"))
-        self.classnum.setItemText(5, _translate("Form", "6반"))
-        self.classnum.setItemText(6, _translate("Form", "7반"))
-        self.classnum.setItemText(7, _translate("Form", "8반"))
-        self.classnum.setItemText(8, _translate("Form", "9반"))
-        self.classnum.setItemText(9, _translate("Form", "10반"))
-        self.classnum.setItemText(10, _translate("Form", "11반"))
-        self.classnum.setItemText(11, _translate("Form", "12반"))
-        self.classnum.setItemText(12, _translate("Form", "13반"))
-        self.pushButton.setText(_translate("Form", "조회"))
+        Form.setWindowTitle(_translate("Form", "급식 및 시간표"))
+        self.img_label.setText(_translate("Form", "TextLabel"))
         self.food_label.setText(_translate("Form", "TextLabel"))
-        self.img_label.setText(_translate("Form", "img"))
-
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Form", "    급식    "))
+        self.comboBox.setItemText(0, _translate("Form", "1반"))
+        self.comboBox.setItemText(1, _translate("Form", "2반"))
+        self.comboBox.setItemText(2, _translate("Form", "3반"))
+        self.comboBox.setItemText(3, _translate("Form", "4반"))
+        self.comboBox.setItemText(4, _translate("Form", "5반"))
+        self.comboBox.setItemText(5, _translate("Form", "6반"))
+        self.comboBox.setItemText(6, _translate("Form", "7반"))
+        self.comboBox.setItemText(7, _translate("Form", "8반"))
+        self.comboBox.setItemText(8, _translate("Form", "9반"))
+        self.comboBox.setItemText(9, _translate("Form", "10반"))
+        self.comboBox.setItemText(10, _translate("Form", "11반"))
+        self.comboBox.setItemText(11, _translate("Form", "12반"))
+        self.comboBox.setItemText(12, _translate("Form", "13반"))
+        self.pushButton.setText(_translate("Form", "조회"))
+        self.text.setText(_translate("Form", "시간표"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Form", "    시간표    "))
 
 
 if __name__ == "__main__":
+    import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
     ui = Ui_Form()
     ui.setupUi(Form)
     Form.show()
-
     app.exec_()
     if img_er == 0:
       os.remove('img.jpg')
     if time_er == 0:
       os.remove('sd.xlsx')
       os.remove(f"시간표 {sh_name}.xlsx")
-
-
-
-
-
