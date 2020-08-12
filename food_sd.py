@@ -74,7 +74,7 @@ if '.' in text_data:
 #   print('2')
   text_data = text_data.replace('.','')
 
-text_data = f'{dy.datetime.today().month}월 {dy.datetime.today().day}일 점심 식단\n' + text_data
+text_data = f'{dy.datetime.today().month}월 {dy.datetime.today().day}일 점심 식단\n' + text_data 
 
 
 #################################################### time_table ######################################################################################
@@ -165,7 +165,7 @@ except AttributeError:
     print("시간표 업데이트 안됨")
     time_er = 1
 ft = "굴림"
-sz = 15
+sz = 16
 
 class Ui_Form(object):
     
@@ -192,11 +192,11 @@ class Ui_Form(object):
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
         self.img_label = QtWidgets.QLabel(self.tab)
-        self.img_label.setGeometry(QtCore.QRect(1, 303, 611, 345))
+        self.img_label.setGeometry(QtCore.QRect(1, 323, 611, 320))
         self.img_label.setAlignment(QtCore.Qt.AlignCenter)
         self.img_label.setObjectName("img_label")
         self.food_label = QtWidgets.QLabel(self.tab)
-        self.food_label.setGeometry(QtCore.QRect(0, 0, 611, 280))
+        self.food_label.setGeometry(QtCore.QRect(0, 0, 611, 320))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -242,10 +242,12 @@ class Ui_Form(object):
         self.text.setObjectName("text")
         self.tabWidget.addTab(self.tab_2, "")
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
-        self.food_label.setFont(QtGui.QFont(ft, sz))
-        self.time_label.setFont(QtGui.QFont(ft, sz))
-        self.img_label.setFont(QtGui.QFont(ft, sz))
-        self.text.setFont(QtGui.QFont(ft, sz))
+        myfont = QtGui.QFont(ft, sz)
+        myfont.setBold(True)
+        self.food_label.setFont(myfont)
+        self.time_label.setFont(myfont)
+        self.img_label.setFont(myfont)
+        self.text.setFont(myfont)
         self.retranslateUi(Form)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Form)
