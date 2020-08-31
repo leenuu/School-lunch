@@ -159,7 +159,7 @@ try:
                     ws.cell(row=i, column=j).value = ws.cell(row=sum_cell[0][1]-1, column=sum_cell[0][0]-1).value
             
         #   ws.merge_cells(start_row= sum_cell[0][1]-1, start_column=sum_cell[0][0]-1,end_row= sum_cell[len(sum_cell)-1][1]-1,end_column=sum_cell[len(sum_cell)-1][0])
-        wb.save(f"시간표 {sh_name}.xlsx")
+    wb.save(f"시간표 {sh_name}.xlsx")
 
 except AttributeError:
     print("시간표 업데이트 안됨")
