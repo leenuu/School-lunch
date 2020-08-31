@@ -159,7 +159,7 @@ try:
                     ws.cell(row=i, column=j).value = ws.cell(row=sum_cell[0][1]-1, column=sum_cell[0][0]-1).value
             
         #   ws.merge_cells(start_row= sum_cell[0][1]-1, start_column=sum_cell[0][0]-1,end_row= sum_cell[len(sum_cell)-1][1]-1,end_column=sum_cell[len(sum_cell)-1][0])
-        wb.save(f"시간표 {sh_name}.xlsx")
+    wb.save(f"시간표 {sh_name}.xlsx")
 
 except AttributeError:
     print("시간표 업데이트 안됨")
@@ -204,6 +204,9 @@ class Ui_Form(object):
         self.food_label.setSizePolicy(sizePolicy)
         self.food_label.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
         self.food_label.setObjectName("food_label")
+        self.refr = QtWidgets.QPushButton(self.tab)
+        self.refr.setGeometry(QtCore.QRect(570, 10, 31, 31))
+        self.refr.setObjectName("refr")
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
@@ -244,6 +247,8 @@ class Ui_Form(object):
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
         myfont = QtGui.QFont(ft, sz)
         myfont.setBold(True)
+        self.refr.setFont(QtGui.QFont(ft, 13))
+        self.refr.setToolTip('음식 사진 불러오기(자주 누르지 마세요.)')
         self.food_label.setFont(myfont)
         self.time_label.setFont(myfont)
         self.img_label.setFont(myfont)
@@ -253,6 +258,7 @@ class Ui_Form(object):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
         self.pushButton.clicked.connect(self.get_time)
+        self.refr.clicked.connect(self.reimg)
         self.food_label.setText(text_data)
         if img_er == 0:
           self.qPixmapFileVar = QtGui.QPixmap()
@@ -261,6 +267,37 @@ class Ui_Form(object):
           self.img_label.setPixmap(self.qPixmapFileVar)
         else:
           self.img_label.setText("\n\n\n음식사진 업로드 안됨 \n 3교시이후 업로드 예정")
+    
+    def reimg(self):
+      img_er = 0
+      try:
+        url = f'http://jeil.jje.hs.kr/jeil-h/food/2020/{dy.datetime.today().month}/{dy.datetime.today().day}/lunch'
+        ua = UserAgent()
+        header = {'User-Agent':str(ua.chrome)}
+        req_html = requests.get(url, headers=header)
+        html = req_html.text
+
+        soup = BeautifulSoup(html,'html.parser')
+        img_ = 'http://jeil.jje.hs.kr/'+ soup.find('img').get('src')
+
+        urllib.request.urlretrieve(img_,'img.jpg')
+
+        image = Image.open('img.jpg')
+
+        resize_image = image.resize((611,345))
+
+        resize_image.save('img.jpg')
+      
+      except AttributeError:
+        img_er = 1
+
+      if img_er == 0:
+        self.qPixmapFileVar = QtGui.QPixmap()
+        self.qPixmapFileVar.load("img.jpg")
+        # self.qPixmapFileVar = self.qPixmapFileVar.scaledToWidth(600)
+        self.img_label.setPixmap(self.qPixmapFileVar)
+
+
 
     def get_time(self):
       try:
@@ -291,6 +328,7 @@ class Ui_Form(object):
         Form.setWindowTitle(_translate("Form", "급식 및 시간표"))
         self.img_label.setText(_translate("Form", "TextLabel"))
         self.food_label.setText(_translate("Form", "TextLabel"))
+        self.refr.setText(_translate("Form", "🔄"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Form", "    급식    "))
         self.comboBox.setItemText(0, _translate("Form", "1반"))
         self.comboBox.setItemText(1, _translate("Form", "2반"))
