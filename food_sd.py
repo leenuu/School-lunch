@@ -141,24 +141,17 @@ try:
             ws.column_dimensions['B'].width = 20
 
     for i in range(16,29):
-        for j in range(3,11 - st):
-            if j != 10:
-                ws.row_dimensions[j].height = 74
-            ws.cell(row=j-2, column=i-13).value = str(ds.cell(row=j, column=i).value)[0:2] + str(ds.cell(row=j, column=i).value)[2:]
-            ws.cell(row=j-2, column=i-13).alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
-            ws.cell(row=j-2, column=i-13).font = Font(name='맑은 고딕', size=14, bold=True)
-            if ds.cell(row=j, column=i).value == None:
-                sum_cell.append([i-13, j-1])
+      for j in range(3,11 - st):
+          if j != 10:
+              ws.row_dimensions[j].height = 74
+          if ds.cell(row=j, column=i).value == None:
+              ws.cell(row=j-2, column=i-13).value = str(ws.cell(row=j-2, column=i-14).value)[0:2] + str(ws.cell(row=j-2, column=i-14).value)[2:]
+          else:
+              ws.cell(row=j-2, column=i-13).value = str(ds.cell(row=j, column=i).value)[0:2] + str(ds.cell(row=j, column=i).value)[2:]
 
+          ws.cell(row=j-2, column=i-13).alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
+          ws.cell(row=j-2, column=i-13).font = Font(name='맑은 고딕', size=14, bold=True)
 
-    # print(sum_cell)
-
-    if sum_cell != []:
-        for i in range(sum_cell[0][1]-1, sum_cell[len(sum_cell)-1][1]):
-                for j in range(sum_cell[0][0], sum_cell[len(sum_cell)-1][0]+1):
-                    ws.cell(row=i, column=j).value = ws.cell(row=sum_cell[0][1]-1, column=sum_cell[0][0]-1).value
-            
-        #   ws.merge_cells(start_row= sum_cell[0][1]-1, start_column=sum_cell[0][0]-1,end_row= sum_cell[len(sum_cell)-1][1]-1,end_column=sum_cell[len(sum_cell)-1][0])
     wb.save(f"시간표 {sh_name}.xlsx")
 
 except AttributeError:
@@ -310,11 +303,23 @@ class Ui_Form(object):
           for p in range(1,14):
               if self.comboBox.currentText() == f'{p}반':
                   for q in range(2,9-st):
-                      if 15 <= len(str(ws.cell(row=q, column=p+2).value)):
-                          time += f'{q-1}교시:' + str(ws.cell(row=q, column=p+2).value) + '\n'
-                      else:
-                          time += f'{q-1}교시:' + str(ws.cell(row=q, column=p+2).value).replace('\n',' ') + '\n'
-
+                    if str(ws.cell(row=q, column=p+2).value).count('/') >= 4:
+                      sttt = 0
+                      strr = ''
+                      for i in str(ws.cell(row=q, column=p+2).value).split('/'):
+                        sttt += 1
+                        if i == str(ws.cell(row=q, column=p+2).value).split('/')[len(str(ws.cell(row=q, column=p+2).value).split('/'))-1]:
+                          strr += i 
+                        else:
+                          strr += i + '/'
+                        if sttt == 5:
+                          strr += '\n'
+                          sttt = 0
+                      time += f'{q-1}교시:' + strr
+                    else:
+                      time += f'{q-1}교시:' + str(ws.cell(row=q, column=p+2).value).replace('\n', ' ') + '\n'
+                    
+                      
           #   for q in range(3,10):
           #         time += f'{q-2}교시:' + str(ws.cell(row=q, column=15).value).replace('\n',' ') + '\n'
 
