@@ -32,7 +32,7 @@ class FoodThread(QtCore.QThread):
         text = ''
         # text_ = ''
         te = ''
-        url = f'http://jeil.jje.hs.kr/jeil-h/food/2020/{dy.datetime.today().month}/{dy.datetime.today().day}/lunch'
+        url = f'http://jeil.jje.hs.kr/jeil-h/food/2021/{dy.datetime.today().month}/{dy.datetime.today().day}/lunch'
 
         ua = UserAgent()
         header = {'User-Agent':str(ua.chrome)}
@@ -110,7 +110,7 @@ class ClassThread(QtCore.QThread):
             soup = BeautifulSoup(html,'html.parser')
 
             for i in soup.find('tbody').find_all('a'):
-                if f'{dy.datetime.today().month}/{dy.datetime.today().day}' in str(i): 
+                if f'{dy.datetime.today().month}월{dy.datetime.today().day}일' in str(i): 
                 # if f'{7}/{31}' in str(i): 
                     sd_data = i
 
@@ -118,6 +118,7 @@ class ClassThread(QtCore.QThread):
 
 
             url_sd = f'http://jeil.jje.hs.kr/jeil-h/0208/board/16996/{data_url}'
+            # https://jeil.jje.hs.kr/jeil-h/food/2021/03/2/lunch
             print(url_sd)
 
 
@@ -143,8 +144,10 @@ class ClassThread(QtCore.QThread):
             ws = wb.active
 
             self.st = 0
-
-            if ds.cell(row=10, column=2).value == None:
+            # print(int(ds.cell(row=10, column=29).value))
+            print(type(ds.cell(row=10, column=29).value))
+            if ds.cell(row=10, column=29).value == None or ds.cell(row=10, column=29).value == '  ':
+                print(1)
                 self.st = 1
 
             for i in range(2,4):
@@ -154,17 +157,17 @@ class ClassThread(QtCore.QThread):
                     ws.cell(row=j-2, column=i-1).alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
                     ws.column_dimensions['B'].width = 20
 
-            for i in range(16,29):
+            for i in range(29,45):
                 for j in range(3,11 - self.st):
                     if j != 10:
                         ws.row_dimensions[j].height = 74
                     if ds.cell(row=j, column=i).value == None:
-                        ws.cell(row=j-2, column=i-13).value = str(ws.cell(row=j-2, column=i-14).value)[0:2] + str(ws.cell(row=j-2, column=i-14).value)[2:]
+                        ws.cell(row=j-2, column=i-26).value = str(ws.cell(row=j-2, column=i-14).value)[0:2] + str(ws.cell(row=j-2, column=i-14).value)[2:]
                     else:
-                        ws.cell(row=j-2, column=i-13).value = str(ds.cell(row=j, column=i).value)[0:2] + str(ds.cell(row=j, column=i).value)[2:]
+                        ws.cell(row=j-2, column=i-26).value = str(ds.cell(row=j, column=i).value)[0:2] + str(ds.cell(row=j, column=i).value)[2:]
 
-                    ws.cell(row=j-2, column=i-13).alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
-                    ws.cell(row=j-2, column=i-13).font = Font(name='맑은 고딕', size=14, bold=True)
+                    ws.cell(row=j-2, column=i-26).alignment = Alignment(horizontal='center', vertical='center',wrapText=True)
+                    ws.cell(row=j-2, column=i-26).font = Font(name='맑은 고딕', size=14, bold=True)
 
                 wb.save(f"시간표 {sh_name}.xlsx")
 
@@ -273,6 +276,9 @@ class food_time(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
         self.pushButton = QtWidgets.QPushButton(self.tab_2)
         self.pushButton.setGeometry(QtCore.QRect(340, 90, 111, 41))
         self.pushButton.setObjectName("pushButton")
@@ -322,6 +328,9 @@ class food_time(object):
         self.comboBox.setItemText(10, _translate("Form", "11반"))
         self.comboBox.setItemText(11, _translate("Form", "12반"))
         self.comboBox.setItemText(12, _translate("Form", "13반"))
+        self.comboBox.setItemText(13, _translate("Form", "14반"))
+        self.comboBox.setItemText(14, _translate("Form", "15반"))
+        self.comboBox.setItemText(15, _translate("Form", "16반"))
         self.pushButton.setText(_translate("Form", "조회"))
         self.text.setText(_translate("Form", "시간표"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Form", "    시간표    "))
@@ -368,12 +377,15 @@ class food_time(object):
 
           time = ''
 
-          for p in range(1,14):
+          self.st = self.th_class.st
+
+          for p in range(1,17):
             #   print(1)
               if self.comboBox.currentText() == f'{p}반':
                 #   print(2)
                   for q in range(2,9-self.st):
-                    # print(3)
+                    print(print(self.st))
+                    print(q)
                     if str(ws.cell(row=q, column=p+2).value).count('/') >= 4:
                       sttt = 0
                       strr = ''
