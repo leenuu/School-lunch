@@ -49,7 +49,7 @@ class FoodThread(QtCore.QThread):
             resize_image.save('img.jpg')
 
         except AttributeError:
-            img_er = 1
+            img_er = 1  
 
         te = str(soup.find_all('dd')[1]).replace('<br/>','\n').replace('<dd>','').replace('</dd>','')
 
@@ -110,7 +110,7 @@ class ClassThread(QtCore.QThread):
             soup = BeautifulSoup(html,'html.parser')
 
             for i in soup.find('tbody').find_all('a'):
-                if f'{dy.datetime.today().month}월{dy.datetime.today().day}일' in str(i): 
+                if f'{dy.datetime.today().month}월{dy.datetime.today().day}일' in str(i) or f'{dy.datetime.today().month}/{dy.datetime.today().day}' in str(i): 
                 # if f'{7}/{31}' in str(i): 
                     sd_data = i
 
@@ -135,7 +135,7 @@ class ClassThread(QtCore.QThread):
 
             preview_url = f'http://jeil.jje.hs.kr{pr}'
 
-            urllib.request.urlretrieve(preview_url, 'sd.xlsx')
+            # urllib.request.urlretrieve(preview_url, 'sd.xlsx')
 
             data = load_workbook("sd.xlsx", data_only=True)
             ds = data.active
@@ -146,7 +146,7 @@ class ClassThread(QtCore.QThread):
             self.st = 0
             # print(int(ds.cell(row=10, column=29).value))
             print(type(ds.cell(row=10, column=29).value))
-            if ds.cell(row=10, column=29).value == None or ds.cell(row=10, column=29).value == '  ':
+            if ds.cell(row=10, column=29).value == None or ds.cell(row=10, column=29).value == '  ' or ds.cell(row=10, column=29) == ' ':
                 print(1)
                 self.st = 1
 
@@ -162,7 +162,7 @@ class ClassThread(QtCore.QThread):
                     if j != 10:
                         ws.row_dimensions[j].height = 74
                     if ds.cell(row=j, column=i).value == None:
-                        ws.cell(row=j-2, column=i-26).value = str(ws.cell(row=j-2, column=i-14).value)[0:2] + str(ws.cell(row=j-2, column=i-14).value)[2:]
+                        ws.cell(row=j-2, column=i-26).value = str(ws.cell(row=j-2, column=i-27).value)[0:2] + str(ws.cell(row=j-2, column=i-27).value)[2:]
                     else:
                         ws.cell(row=j-2, column=i-26).value = str(ds.cell(row=j, column=i).value)[0:2] + str(ds.cell(row=j, column=i).value)[2:]
 
@@ -384,8 +384,8 @@ class food_time(object):
               if self.comboBox.currentText() == f'{p}반':
                 #   print(2)
                   for q in range(2,9-self.st):
-                    print(print(self.st))
-                    print(q)
+                    # print(print(self.st))
+                    # print(q)
                     if str(ws.cell(row=q, column=p+2).value).count('/') >= 4:
                       sttt = 0
                       strr = ''
@@ -445,5 +445,5 @@ if __name__ == "__main__":
     if ui.lunch[1] == 0:
       os.remove('img.jpg')
     if ui.td[0] == 0:
-      os.remove('sd.xlsx')
+      # os.remove('sd.xlsx')
       os.remove(f"시간표 {ui.td[1]}.xlsx")
