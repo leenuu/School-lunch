@@ -135,7 +135,7 @@ class ClassThread(QtCore.QThread):
 
             preview_url = f'http://jeil.jje.hs.kr{pr}'
 
-            # urllib.request.urlretrieve(preview_url, 'sd.xlsx')
+            urllib.request.urlretrieve(preview_url, 'sd.xlsx')
 
             data = load_workbook("sd.xlsx", data_only=True)
             ds = data.active
@@ -445,5 +445,5 @@ if __name__ == "__main__":
     if ui.lunch[1] == 0:
       os.remove('img.jpg')
     if ui.td[0] == 0:
-      # os.remove('sd.xlsx')
+      os.remove('sd.xlsx')
       os.remove(f"시간표 {ui.td[1]}.xlsx")
