@@ -12,6 +12,7 @@ import cv2
 import os 
 import sys
 import time
+import json
 
 class FoodThread(QtCore.QThread):
 
@@ -144,9 +145,10 @@ class ClassThread(QtCore.QThread):
             ws = wb.active
 
             self.st = 0
-            # print(int(ds.cell(row=10, column=29).value))
-            print(type(ds.cell(row=10, column=29).value))
-            if ds.cell(row=10, column=29).value == None or ds.cell(row=10, column=29).value == '  ' or ds.cell(row=10, column=29) == ' ':
+            # print(ds.cell(row=10, column=29).value)
+            # print(len(ds.cell(row=10, column=29).value))
+            # print(type(ds.cell(row=10, column=29).value))
+            if ds.cell(row=10, column=29).value == None or ds.cell(row=10, column=29).value == '  ' or ds.cell(row=10, column=29) == ' ' or ds.cell(row=10, column=29).value == '\n':
                 print(1)
                 self.st = 1
 
@@ -183,6 +185,7 @@ class food_time(object):
 
     def __init__(self, parent=None):
         super().__init__()
+        
         self.th_food = FoodThread(self)
         self.th_food.threadEvent.connect(self.lunch_th)
 
@@ -197,6 +200,11 @@ class food_time(object):
         self.result = dict()
         self.lunch = list()
         self.td = list()
+        self.d_days = dict()
+        self.d_day()
+
+        
+
 
         if self.th_food.isRun == False:
             self.th_food.isRun = True
@@ -287,6 +295,20 @@ class food_time(object):
         self.text.setAlignment(QtCore.Qt.AlignCenter)
         self.text.setObjectName("text")
         self.tabWidget.addTab(self.tab_2, "")
+        self.tab_3 = QtWidgets.QWidget()
+        self.tab_3.setObjectName("tab_3")
+        self.d_day = QtWidgets.QLabel(self.tab_3)
+        self.d_day.setGeometry(QtCore.QRect(80, 180, 441, 291))
+        self.d_day.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.d_day.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
+        
+        self.d_day.setObjectName("d_day")
+        self.im_d_day = QtWidgets.QLabel(self.tab_3)
+        self.im_d_day.setGeometry(QtCore.QRect(80, 10, 441, 131))
+        self.im_d_day.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.im_d_day.setAlignment(QtCore.Qt.AlignCenter)
+        self.im_d_day.setObjectName("im_d_day")
+        self.tabWidget.addTab(self.tab_3, "")
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
         myfont = QtGui.QFont(ft, sz)
         myfont.setBold(True)
@@ -298,15 +320,28 @@ class food_time(object):
         self.img_label.setFont(myfont)
         self.text.setFont(myfont)
         self.retranslateUi(Form)
+        im = QtGui.QFont(ft, 25)
+        im.setBold(True)
+        self.im_d_day.setFont(im)
+        self.d_day.setFont(myfont)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
         self.pushButton.clicked.connect(self.get_time)
         self.refr.clicked.connect(self.reimg)
-        self.img_label.setText("로딩중")
+        self.img_label.setText("\n로딩중")
         self.food_label.setText("로딩중")
         self.time_label.setText("로딩중")
         
+        self.im_d_day.setText(f"수능 D-{self.d_days['수능']}")
+        t = ''
+        for st in list(self.d_days.keys()):
+          if st == "수능":
+            continue
+          t += f"{st} D-{self.d_days[st]}\n"
+
+        self.d_day.setText(t)
+
         
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -334,6 +369,10 @@ class food_time(object):
         self.pushButton.setText(_translate("Form", "조회"))
         self.text.setText(_translate("Form", "시간표"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Form", "    시간표    "))
+        self.d_day.setText(_translate("Form", "TextLabel"))
+        self.im_d_day.setText(_translate("Form", "TextLabel"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("Form", "    D-Day    "))
+        
 
     def reimg(self):
       if self.th_food.isRun == False:
@@ -414,7 +453,7 @@ class food_time(object):
     def lunch_th(self, data):
       self.lunch = data
       print(self.lunch)
-      self.food_label.setText(self.lunch[0])
+      self.food_label.setText('\n' + self.lunch[0])
       if self.lunch[1] == 0:
         self.qPixmapFileVar = QtGui.QPixmap()
         self.qPixmapFileVar.load("img.jpg")
@@ -432,6 +471,18 @@ class food_time(object):
         print(data)
       except FileNotFoundError:
         self.time_label.setText("시간표 업로드 안됨")
+    
+    def d_day(self):
+      with open("date.json","r", encoding='UTF-8-sig') as f:
+        d_day_json = dict()
+        d_day_json = json.load(f)
+        day = dict()
+
+        for d_name in list(d_day_json.keys()):
+          # print(f"{d_name} D-Day {(dy.datetime(2021, d_day_json[d_name][0], d_day_json[d_name][1]) - dy.datetime.today()).days + 1}")
+          self.d_days[d_name] = (dy.datetime(2021, d_day_json[d_name][0], d_day_json[d_name][1]) - dy.datetime.today()).days 
+        
+        
       
 if __name__ == "__main__":
     st_time = time.time()
