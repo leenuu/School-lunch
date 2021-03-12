@@ -201,7 +201,7 @@ class food_time(object):
         self.lunch = list()
         self.td = list()
         self.d_days = dict()
-        self.d_day()
+        self._d_day()
 
         
 
@@ -298,7 +298,7 @@ class food_time(object):
         self.tab_3 = QtWidgets.QWidget()
         self.tab_3.setObjectName("tab_3")
         self.d_day = QtWidgets.QLabel(self.tab_3)
-        self.d_day.setGeometry(QtCore.QRect(80, 180, 441, 291))
+        self.d_day.setGeometry(QtCore.QRect(80, 180, 441, 491))
         self.d_day.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.d_day.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
         
@@ -337,6 +337,9 @@ class food_time(object):
         t = ''
         for st in list(self.d_days.keys()):
           if st == "수능":
+            continue
+          if self.d_days[st] == 0:
+            t += f"{st} D-Day\n"
             continue
           t += f"{st} D-{self.d_days[st]}\n"
 
@@ -471,16 +474,19 @@ class food_time(object):
         print(data)
       except FileNotFoundError:
         self.time_label.setText("시간표 업로드 안됨")
-    
-    def d_day(self):
+     
+    def _d_day(self):
       with open("date.json","r", encoding='UTF-8-sig') as f:
         d_day_json = dict()
         d_day_json = json.load(f)
-        day = dict()
+        # day = dict()
 
         for d_name in list(d_day_json.keys()):
           # print(f"{d_name} D-Day {(dy.datetime(2021, d_day_json[d_name][0], d_day_json[d_name][1]) - dy.datetime.today()).days + 1}")
-          self.d_days[d_name] = (dy.datetime(2021, d_day_json[d_name][0], d_day_json[d_name][1]) - dy.datetime.today()).days 
+          if (dy.datetime(2021, d_day_json[d_name][0], d_day_json[d_name][1]) - dy.datetime.today()).days + 1< 0:
+            continue
+          else:
+            self.d_days[d_name] = (dy.datetime(2021, d_day_json[d_name][0], d_day_json[d_name][1]) - dy.datetime.today()).days + 1
         
         
       
