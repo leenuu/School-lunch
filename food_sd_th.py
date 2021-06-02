@@ -381,7 +381,7 @@ class food_time(object):
       if self.th_food.isRun == False:
         img_er = 0
         try:
-          url = f'http://jeil.jje.hs.kr/jeil-h/food/2020/{dy.datetime.today().month}/{dy.datetime.today().day}/lunch'
+          url = f'http://jeil.jje.hs.kr/jeil-h/food/2021/{dy.datetime.today().month}/{dy.datetime.today().day}/lunch'
           ua = UserAgent()
           header = {'User-Agent':str(ua.chrome)}
           req_html = requests.get(url, headers=header)
